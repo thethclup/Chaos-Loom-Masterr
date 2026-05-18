@@ -4,24 +4,41 @@
   "version": "1.0.0",
   "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
   "image": "https://chaosoom.vercel.app/logo.png",
-  "wallets": {
-    "base": "0xe157F1F5e12adB38Ba013683E9Ce24efe21e5bA6"
-  },
+  "owner": "[PLACEHOLDER_OWNER_WALLET]",
+  "agentWallet": "0xe157F1F5e12adB38Ba013683E9Ce24efe21e5bA6",
+  "active": true,
+  "skills": [
+    {
+      "id": "chaos-management",
+      "name": "Chaos Management",
+      "description": "Real-time chaos orchestration, thread path prediction, and entropy maximization."
+    },
+    {
+      "id": "entropy-control",
+      "name": "Entropy Control",
+      "description": "Manage and synchronize multiple chaotic instances and unstable patterns."
+    },
+    {
+      "id": "disorder-orchestration",
+      "name": "Disorder Orchestration",
+      "description": "Analyze and optimize chaotic chain reactions in real-time."
+    }
+  ],
   "services": [
     {
       "name": "A2A",
-      "endpoint": "https://chaosoom.vercel.app/.well-known/agent-card.json",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "endpoint": ".well-known/agent-card.json"
     },
     {
       "name": "MCP",
-      "endpoint": "https://chaosoom.vercel.app/api/mcp",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "endpoint": "/api/mcp"
     },
     {
       "name": "API",
-      "endpoint": "https://chaosoom.vercel.app/api/agent",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "endpoint": "/api/agent"
     }
   ],
   "capabilities": [
@@ -34,6 +51,12 @@
     "mcp-command-execution"
   ],
   "supportedChains": ["eip155:8453"],
-  "active": true,
-  "status": "online"
+  "x402Support": false,
+  "registrations": [
+    {
+      "agentId": null,
+      "agentRegistry": "eip155:8453:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+    }
+  ],
+  "supportedTrust": ["reputation"]
 }

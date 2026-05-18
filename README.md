@@ -16,18 +16,31 @@
 
 ## Technologies
 
-- React + Vite 
+- Next.js 14 (App Router) & React
 - Tailwind CSS
 - Canvas API
 - Framer Motion
 - Wagmi, Viem, Siwe (Base Network Integration)
-- Full-stack Express backend 
 
 ## Chaosoom Orchestrator / ERC-8004 Agent
 
-This project also includes the **Chaosoom Orchestrator** integration:
-- `public/.well-known/agent-card.json`: ERC-8004 AI Agent Registry.
-- API Endpoints (`/api/mcp`, `/api/agent`): MCP server endpoints for chaos coordination.
+This project includes the **Chaosoom Orchestrator** integration, an AI agent specialized in chaos management, entropy control, and pattern emergence.
+
+- **AI Agent Registry**: Handled via `.well-known/agent-card.json`.
+- **API Endpoints**:
+  - `/api/mcp` - Model Context Protocol (MCP) server endpoints for chaos coordination and executing remote commands.
+  - `/api/agent` - Agent info endpoint detailing ERC-8004 capabilities and state.
+
+## MCP Connection Guide
+
+The **Chaosoom Orchestrator** uses the **Model Context Protocol (MCP)** to communicate with standard MCP clients and AI systems.
+
+To connect an AI client to this Orchestrator:
+1. Provide the main MCP endpoint url: `https://[YOUR_DEPLOYED_URL]/api/mcp`
+2. The MCP interface will return available configuration details and standard AI tools (e.g. `get_race_status`, `start_race`, `optimize_speed`).
+3. Send POST requests to execute chaotic commands securely.
+
+*Note: All endpoints are secured and configured with necessary CORS policies.*
 
 ## Getting Started
 
@@ -40,14 +53,14 @@ This project also includes the **Chaosoom Orchestrator** integration:
 
 2. Environment Variables:
    Create a `.env` file based on `.env.example`.
-   *(Never commit sensitive keys to your version control!)*
+   *(Never commit sensitive keys or wallet info to version control!)*
 
 3. Start the local server:
    ```bash
    npm run dev
    ```
 
-4. Production Build:
+4. Build for Production:
    ```bash
    npm run build
    npm start
@@ -55,8 +68,7 @@ This project also includes the **Chaosoom Orchestrator** integration:
 
 ### Wallet Integrations
 
-The game uses standard EVM wallet interactions (built using Wagmi) connected to **Base**. 
-Make sure you have an EVM-compatible wallet extension (like MetaMask, Coinbase Wallet, or Rabby) installed if you wish to record scores on-chain or use the 'Say GM' functionality.
+The game uses standard EVM wallet interactions (built using Wagmi) connected to **Base** (Chain ID: 8453). Make sure you have an EVM-compatible wallet extension installed to record scores on-chain.
 
 ---
 *Created as part of the Chaos Loom Master universe.*
