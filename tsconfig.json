@@ -23,5 +23,5 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "exclude": ["src/api/**/*", "app/api/**/*"]
+  "exclude": ["app/api/**/*", "src/app/api/**/*"]
 }
