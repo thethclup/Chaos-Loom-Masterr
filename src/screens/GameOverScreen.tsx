@@ -2,6 +2,7 @@ import { ScreenState, GameState } from '../game/types';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import { useAccount, useSignMessage } from 'wagmi';
 import { SiweMessage } from 'siwe';
+import { GMButton } from '../components/GMButton';
 
 export default function GameOverScreen({ setScreen, gameState }: { setScreen: (s: ScreenState) => void, gameState: GameState }) {
   const { address, chainId } = useAccount();
@@ -75,6 +76,8 @@ export default function GameOverScreen({ setScreen, gameState }: { setScreen: (s
           <Trophy size={18} />
           RECORD GLORIOUS CHAOS
         </button>
+        
+        <GMButton className="w-full py-4 rounded-xl font-['Cinzel'] font-bold tracking-widest text-sm bg-[#E8A020]/20 hover:bg-[#E8A020]/30 border border-[#E8A020]/40 text-[#E8A020] transition-colors flex items-center justify-center gap-2 mb-4 shadow-lg" />
 
         <button 
           onClick={() => setScreen('GAME')}
