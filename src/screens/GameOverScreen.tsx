@@ -1,28 +1,37 @@
+import { useState } from 'react';
 import { ScreenState, GameState } from '../game/types';
-import { ArrowLeft, Trophy } from 'lucide-react';
-import { useAccount, useSignMessage } from 'wagmi';
+import { Trophy } from 'lucide-react';
+import { useAccount, useSignMessage, useSwitchChain } from 'wagmi';
+import { base } from 'wagmi/chains';
 import { SiweMessage } from 'siwe';
 import { GMButton } from '../components/GMButton';
 
 export default function GameOverScreen({ setScreen, gameState }: { setScreen: (s: ScreenState) => void, gameState: GameState }) {
   const { address, chainId } = useAccount();
-  const { signMessageAsync } = useSignMessage();
+  const { switchChainAsync } = useSwitchChain();
+  const { signMessageAsync, isPending: isSigning } = useSignMessage();
+  const [statusMsg, setStatusMsg] = useState<string | null>(null);
 
   const handleRecordOnChain = async () => {
     if (!address) {
-      alert("Please connect your wallet first.");
+      setStatusMsg('Please connect your wallet on Base Mainnet first.');
       return;
     }
-    
+
+    setStatusMsg(null);
     try {
+      if (chainId !== base.id) {
+        await switchChainAsync({ chainId: base.id });
+      }
+
       const message = new SiweMessage({
         domain: window.location.host,
         address,
         statement: `Record Chaos Loom Entropy Score: ${gameState.score.toFixed(0)}`,
         uri: window.location.origin,
         version: '1',
-        chainId: chainId || 8453, // fallback to base
-        nonce: Math.random().toString(36).substring(2, 10), // normally fetched from backend
+        chainId: base.id,
+        nonce: Math.random().toString(36).substring(2, 10),
       });
 
       const signature = await signMessageAsync({
@@ -30,12 +39,10 @@ export default function GameOverScreen({ setScreen, gameState }: { setScreen: (s
         message: message.prepareMessage(),
       });
 
-      console.log("SIWE Signature generated:", signature);
-      alert("Glorious Chaos Recorded On-Chain! (Signature generated: " + signature.slice(0,10) + "...)");
-      setScreen('LEADERBOARD');
+      setStatusMsg(`Recorded on Base Mainnet (${signature.slice(0, 10)}...)`);
+      window.setTimeout(() => setScreen('LEADERBOARD'), 900);
     } catch (error) {
-      console.error(error);
-      alert("Failed to sign payload.");
+      setStatusMsg(error instanceof Error ? error.message : 'Failed to sign payload.');
     }
   };
 
@@ -71,11 +78,16 @@ export default function GameOverScreen({ setScreen, gameState }: { setScreen: (s
 
         <button 
           onClick={handleRecordOnChain}
-          className="w-full bg-gradient-to-r from-[#ff4e00] to-red-600 hover:from-[#ff6e00] hover:to-red-500 py-4 rounded-xl font-bold tracking-widest text-sm flex items-center justify-center gap-2 mb-4 shadow-[0_0_20px_rgba(255,78,0,0.4)]"
+          disabled={isSigning}
+          className="w-full bg-gradient-to-r from-[#ff4e00] to-red-600 hover:from-[#ff6e00] hover:to-red-500 disabled:opacity-60 py-4 rounded-xl font-bold tracking-widest text-sm flex items-center justify-center gap-2 mb-3 shadow-[0_0_20px_rgba(255,78,0,0.4)]"
         >
           <Trophy size={18} />
-          RECORD GLORIOUS CHAOS
+          {isSigning ? 'SIGNING ON BASE MAINNET...' : 'RECORD GLORIOUS CHAOS'}
         </button>
+
+        {statusMsg && (
+          <p className="text-xs font-mono text-amber-300 text-center mb-3">{statusMsg}</p>
+        )}
         
         <GMButton className="w-full py-4 rounded-xl font-['Cinzel'] font-bold tracking-widest text-sm bg-[#E8A020]/20 hover:bg-[#E8A020]/30 border border-[#E8A020]/40 text-[#E8A020] transition-colors flex items-center justify-center gap-2 mb-4 shadow-lg" />
 

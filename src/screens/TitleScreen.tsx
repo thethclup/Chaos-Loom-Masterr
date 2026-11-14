@@ -1,10 +1,14 @@
 import { motion } from 'motion/react';
 import { ScreenState } from '../game/types';
-import { useAccount, useConnect } from 'wagmi';
+import { useAccount, useConnect, useSwitchChain } from 'wagmi';
+import { base } from 'wagmi/chains';
 
 export default function TitleScreen({ setScreen }: { setScreen: (s: ScreenState) => void }) {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   const { connectors, connect } = useConnect();
+  const { switchChain, isPending: isSwitching } = useSwitchChain();
+
+  const isWrongChain = isConnected && chainId !== base.id;
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden">
@@ -58,12 +62,21 @@ export default function TitleScreen({ setScreen }: { setScreen: (s: ScreenState)
               onClick={() => connect({ connector: connectors[0] })}
               className="text-xs font-mono text-white/50 hover:text-white transition-colors uppercase border border-white/10 px-4 py-2 rounded-full"
             >
-              Connect Wallet (Base)
+              Connect Wallet (Base Mainnet)
+            </button>
+          ) : isWrongChain ? (
+            <button
+              onClick={() => switchChain({ chainId: base.id })}
+              disabled={isSwitching}
+              className="text-xs font-mono text-amber-300 hover:text-amber-200 border border-amber-400/30 bg-amber-500/10 px-4 py-2 rounded-full transition-colors"
+            >
+              {isSwitching ? 'Switching...' : 'Switch to Base Mainnet'}
             </button>
           ) : (
             <div className="text-xs font-mono text-[#00ffaa] border border-[#00ffaa]/20 bg-[#00ffaa]/5 px-4 py-2 rounded-full flex gap-2 items-center">
               <span className="w-2 h-2 rounded-full bg-[#00ffaa] animate-pulse"></span>
-              {address?.slice(0, 6)}...{address?.slice(-4)}
+              <span>Base</span>
+              <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>
             </div>
           )}
         </div>

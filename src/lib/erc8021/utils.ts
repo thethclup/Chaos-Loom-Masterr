@@ -1,7 +1,9 @@
 /**
- * ERC-8021 Transaction Attribution Placeholder
+ * ERC-8021 Transaction Attribution
  */
 export const BUILDER_CODE = "bc_0lbrlvkz";
+export const ERC8021_DATA_SUFFIX =
+  "0x07626173656170700080218021802180218021802180218021" as const;
 
 export function getAttributionData(appConfigCode: string = "[ATTRIBUTION_CODE]") {
   return {
@@ -12,9 +14,14 @@ export function getAttributionData(appConfigCode: string = "[ATTRIBUTION_CODE]")
   };
 }
 
-export function generateAttributedTransactionPayload(txData: any, intent: string) {
+export function generateAttributedTransactionPayload(
+  txData: { to: `0x${string}`; value: bigint; data?: `0x${string}` },
+  _intent: string
+) {
+  const baseData = txData.data && txData.data !== "0x" ? txData.data : ERC8021_DATA_SUFFIX;
   return {
-    ...txData,
-    _attribution: getAttributionData("chaos_loom_tx_intent_" + intent)
-  }
+    to: txData.to,
+    value: txData.value,
+    data: baseData,
+  };
 }
